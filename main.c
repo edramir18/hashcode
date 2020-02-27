@@ -1,22 +1,61 @@
-#include <stdio.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: edramire <edramire@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2020/02/27 01:06:37 by edramire          #+#    #+#             */
+/*   Updated: 2020/02/27 02:48:10 by edramire         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-typedef struct	s_library
+#include "hashcode.h"
+
+void	load_facility(t_facility *f, FILE *fd)
 {
-	int		total;
-	double	score;
-	int		*books;
-	int		ship_by_day;
-	int		signup;
-}				t_library;
+	fscanf(fd, "%d %d %d ", &f->books, &f->libraries, &f->days);
+	f->points = malloc(sizeof(int) * f->books);
+	if (f->points == NULL)
+		exit(1);
+	for (int i = 0; i < f->books; i++)
+		fscanf(fd, "%d", f->points + i);
+}
 
-typedef struct facility
+void	load_library(t_library *lib, FILE *fd)
 {
-	int		days;
-	int		books;
-	int		libraries;
-	int		*weights;
-};
+	fscanf(fd, "%d %d %d", &lib->books, &lib->signup, &lib->ship_by_day);
+	lib->list = malloc(sizeof(int) * lib->books);
+	if (lib->list == NULL)
+		exit(1);
+	for (int j=0; j < lib->books; j++)
+		fscanf(fd, "%d", lib->list + j);
+}
 
+void		clear_facility(t_facility *f)
+{
+	t_library *l;
+
+	for(int i = 0; i < f->libraries; i++)
+	{
+		l = f->list + i;
+		free(l->list);
+	}
+	free(f->list);
+	free(f->points);
+}
+
+void	print_library(t_library *lib, int index)
+{
+	printf("%6d %6d %6d %6d %10.2f %6d %6d", index, lib->books, lib->signup, lib->ship_by_day, lib->score, lib->points, lib->days);
+	/*
+	for (int i = 0; i < lib->books; i++)
+	{
+		printf(" %d", lib->list[i]);
+	}
+	*/
+	printf("\n");
+}
 
 int main(int n, char **args)
 {
@@ -27,26 +66,23 @@ int main(int n, char **args)
 		return (0);
 	int books, libraries, days;
 
-	fscanf(f, "%d %d %d", &books, &libraries, &days);
-	printf("%d %d %d\n", books, libraries, days);
-	int book;
-	for (int i =0 ; i < books; i++)
+	t_facility fact;
+	bzero(&fact, sizeof(t_facility));
+	load_facility(&fact, f);
+	fact.list = malloc(sizeof(t_library) * fact.libraries);
+	bzero(fact.list, sizeof(t_library) * fact.libraries);
+	if (fact.list == NULL)
+		exit(1);
+	for (int i = 0; i < fact.libraries; i++)
 	{
-		fscanf(f, "%d", &book);
-		printf("%d ", book);
+		load_library(fact.list + i, f);
+		sort_books(fact.list + i, fact.points);
 	}
-	printf("\n");
-	int lbooks, ldays, lship;
-	for (int i = 0; i < libraries; i++)
+	for (int i = 0; i < fact.libraries; i++)
 	{
-		fscanf(f, "%d %d %d", &lbooks, &ldays, &lship);
-		printf("%d %d %d\n", lbooks, ldays, lship);
-		for (int j=0; j < lbooks; j++)
-		{
-			fscanf(f, "%d", &book);
-			printf("%d ", book);
-		}
-		printf("\n");
+		show(fact.list + i, fact.points, fact.days);
+		print_library(fact.list + i, i);
 	}
 	fclose(f);
+	clear_facility(&fact);
 }
