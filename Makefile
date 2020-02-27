@@ -6,7 +6,7 @@
 #    By: edramire <edramire@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/27 00:51:07 by edramire          #+#    #+#              #
-#    Updated: 2020/02/27 03:02:18 by edramire         ###   ########.fr        #
+#    Updated: 2020/02/27 10:28:51 by edramire         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,11 +17,14 @@ CC := gcc
 A := a_example.txt
 B := b_read_on.txt
 C := c_incunabula.txt
+D := d_tough_choices.txt
+E := e_so_many_books.txt
+F := f_libraries_of_the_world.txt
 
 SRCS := \
-	show.c			\
-	sort_books.c	\
-	sort_libraries.c	\
+	calculate_score.c			\
+	sort_books.c				\
+	sort_libraries.c			\
 
 OBJS := $(SRCS:.c=.o)
 
@@ -52,3 +55,12 @@ b: $(NAME)
 
 c: $(NAME)
 	./$(NAME) $(C)
+
+d: $(NAME)
+	./$(NAME) $(D)
+
+e: $(NAME)
+	./$(NAME) $(E)
+
+f: $(NAME)
+	./$(NAME) $(F)

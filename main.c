@@ -6,7 +6,7 @@
 /*   By: edramire <edramire@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 01:06:37 by edramire          #+#    #+#             */
-/*   Updated: 2020/02/27 02:58:02 by edramire         ###   ########.fr       */
+/*   Updated: 2020/02/27 15:52:18 by edramire         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,18 @@ void		clear_facility(t_facility *f)
 	free(f->points);
 }
 
-void	print_library(t_library *lib, int index)
+void	print_libraries(t_facility *fact)
 {
-	printf("%6d %6d %6d %6d %10.2f %6d %6d", index, lib->books, lib->signup, lib->ship_by_day, lib->score, lib->points, lib->days);
-	/*
-	for (int i = 0; i < lib->books; i++)
+	t_library lib;
+	printf("%6s %6s %6s %6s %-10s %6s %6s R\n", "ID", "Books", "Signup", "B/Days",
+		"Score", "Points", "Days");
+
+	for (int i = 0; i < fact->libraries; i++)
 	{
-		printf(" %d", lib->list[i]);
+		lib = fact->list[i];
+		printf("%6d %6d %6d %6d %10.2f %6d %6d %d\n", i, lib.books, lib.signup,
+			lib.ship_by_day, lib.score, lib.points, lib.days, lib.registered);
 	}
-	*/
-	printf("\n");
 }
 
 int main(int n, char **args)
@@ -64,8 +66,6 @@ int main(int n, char **args)
 	FILE *f = fopen(args[1], "r");
 	if (f == NULL)
 		return (0);
-	int books, libraries, days;
-
 	t_facility fact;
 	bzero(&fact, sizeof(t_facility));
 	load_facility(&fact, f);
@@ -79,10 +79,45 @@ int main(int n, char **args)
 		sort_books(fact.list + i, fact.points);
 	}
 	for (int i = 0; i < fact.libraries; i++)
-		show(fact.list + i, fact.points, fact.days);
+		calculate_score(fact.list + i, fact.points, fact.days);
 	sort_libraries(&fact);
-	for (int i = 0; i < fact.libraries; i++)
-		print_library(fact.list + i, i);
+	//print_libraries(&fact);
+
+	int index = 0;
+	int days = 0;
+	int book;
+	int k;
+	int score = 0;
+	int points = 0;
+	for (int i = 0; i < fact.days; i++)
+	{
+		for(int j = 0; j < fact.signup; j++)
+		{
+			t_library *lib = fact.list + j;
+			k = 0;
+			while (lib->shipped < lib->books && k < lib->ship_by_day)
+			{
+				book = lib->list[lib->shipped++];
+				score += fact.points[book];
+				fact.points[book] = 0;
+				k++;
+			}
+			//printf("%d\n", j);
+		}
+		for (int i = 0; i < fact.libraries; i++)
+			calculate_score(fact.list + i, fact.points, fact.days);
+		sort_libraries(&fact);
+		++days;
+		if (index < fact.libraries && days == fact.list[index].signup)
+		{
+			fact.list[index].registered = 1;
+			++fact.signup;
+			++index;
+			days = 0;
+		}
+	}
+	//print_libraries(&fact);
+	printf("SCORE: %d\n", score);
 	fclose(f);
 	clear_facility(&fact);
 }
