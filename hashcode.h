@@ -8,6 +8,7 @@
 typedef struct	s_library
 {
 	int		books;
+	int		id;
 	int		*list;
 	int		ship_by_day;
 	int		signup;

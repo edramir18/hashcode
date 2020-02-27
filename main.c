@@ -6,7 +6,7 @@
 /*   By: edramire <edramire@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 01:06:37 by edramire          #+#    #+#             */
-/*   Updated: 2020/02/27 15:52:18 by edramire         ###   ########.fr       */
+/*   Updated: 2020/02/27 16:53:34 by edramire         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,19 @@ void	print_libraries(t_facility *fact)
 	}
 }
 
+void	write_file(t_facility *fac)
+{
+	printf("%d\n", fac->signup);
+	for (int i = 0; i < fac->signup; i++)
+	{
+		t_library *lib = fac->list + i;
+		printf("%d %d\n", lib->id, lib->shipped);
+		for(int j = 0; j < lib->shipped; j++)
+			printf("%s%d", j == 0 ? "" : " ", lib->list[j]);
+		printf("\n");
+	}
+}
+
 int main(int n, char **args)
 {
 	if (n != 2)
@@ -76,6 +89,7 @@ int main(int n, char **args)
 	for (int i = 0; i < fact.libraries; i++)
 	{
 		load_library(fact.list + i, f);
+		fact.list[i].id = i;
 		sort_books(fact.list + i, fact.points);
 	}
 	for (int i = 0; i < fact.libraries; i++)
@@ -104,9 +118,8 @@ int main(int n, char **args)
 			}
 			//printf("%d\n", j);
 		}
-		for (int i = 0; i < fact.libraries; i++)
-			calculate_score(fact.list + i, fact.points, fact.days);
-		sort_libraries(&fact);
+		for (int j = 0; j < fact.libraries; j++)
+			sort_books(fact.list + j, fact.points);
 		++days;
 		if (index < fact.libraries && days == fact.list[index].signup)
 		{
@@ -117,7 +130,8 @@ int main(int n, char **args)
 		}
 	}
 	//print_libraries(&fact);
-	printf("SCORE: %d\n", score);
+	write_file(&fact);
+	fprintf(stderr, "SCORE: %d\n", score);
 	fclose(f);
 	clear_facility(&fact);
 }
