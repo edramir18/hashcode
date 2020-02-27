@@ -1,1 +1,3 @@
 *.out
+.vs_code/
+*.o
