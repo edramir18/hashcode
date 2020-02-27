@@ -6,7 +6,7 @@
 #    By: edramire <edramire@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/02/27 00:51:07 by edramire          #+#    #+#              #
-#    Updated: 2020/02/27 02:39:30 by edramire         ###   ########.fr        #
+#    Updated: 2020/02/27 03:02:18 by edramire         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ C := c_incunabula.txt
 SRCS := \
 	show.c			\
 	sort_books.c	\
+	sort_libraries.c	\
 
 OBJS := $(SRCS:.c=.o)
 
@@ -33,6 +34,7 @@ debug:
 	$(CC) -g -o $(NAME) $(SRCS) main.c
 clean:
 	rm -rf *.out
+	rm -rf *.o
 
 fclean: clean
 	rm -rf $(NAME)

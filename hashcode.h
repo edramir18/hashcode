@@ -27,5 +27,6 @@ typedef struct	s_facility
 
 void	show(t_library *lib, int *books, int days);
 void	sort_books(t_library *lib, int *books);
+void	sort_libraries(t_facility *fac);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: edramire <edramire@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 01:06:37 by edramire          #+#    #+#             */
-/*   Updated: 2020/02/27 02:48:10 by edramire         ###   ########.fr       */
+/*   Updated: 2020/02/27 02:58:02 by edramire         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,10 @@ int main(int n, char **args)
 		sort_books(fact.list + i, fact.points);
 	}
 	for (int i = 0; i < fact.libraries; i++)
-	{
 		show(fact.list + i, fact.points, fact.days);
+	sort_libraries(&fact);
+	for (int i = 0; i < fact.libraries; i++)
 		print_library(fact.list + i, i);
-	}
 	fclose(f);
 	clear_facility(&fact);
 }
