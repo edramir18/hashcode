@@ -6,7 +6,7 @@
 /*   By: edramire <edramire@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 01:06:37 by edramire          #+#    #+#             */
-/*   Updated: 2020/02/27 16:53:34 by edramire         ###   ########.fr       */
+/*   Updated: 2020/02/27 17:54:05 by edramire         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ int main(int n, char **args)
 				book = lib->list[lib->shipped++];
 				score += fact.points[book];
 				fact.points[book] = 0;
+				sort_books(fact.list + j, fact.points);
 				k++;
 			}
 			//printf("%d\n", j);
