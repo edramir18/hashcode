@@ -6,7 +6,7 @@
 /*   By: edramire <edramire@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/02/27 01:06:37 by edramire          #+#    #+#             */
-/*   Updated: 2020/02/27 17:54:05 by edramire         ###   ########.fr       */
+/*   Updated: 2020/02/28 00:42:09 by edramire         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,15 +111,21 @@ int main(int n, char **args)
 			k = 0;
 			while (lib->shipped < lib->books && k < lib->ship_by_day)
 			{
-				book = lib->list[lib->shipped++];
+				book = lib->list[lib->shipped];
+				if (fact.points[book] == 0)
+				{
+					++lib->registered;
+					break;
+				}
+				++lib->shipped;
 				score += fact.points[book];
 				fact.points[book] = 0;
-				sort_books(fact.list + j, fact.points);
 				k++;
 			}
+			sort_books(fact.list + j, fact.points);
 			//printf("%d\n", j);
 		}
-		for (int j = 0; j < fact.libraries; j++)
+		for (int j = fact.signup + 1; j < fact.libraries; j++)
 			sort_books(fact.list + j, fact.points);
 		++days;
 		if (index < fact.libraries && days == fact.list[index].signup)
@@ -132,7 +138,7 @@ int main(int n, char **args)
 	}
 	//print_libraries(&fact);
 	write_file(&fact);
-	fprintf(stderr, "SCORE: %d\n", score);
+	//fprintf(stderr, "SCORE: %d\n", score);
 	fclose(f);
 	clear_facility(&fact);
 }
